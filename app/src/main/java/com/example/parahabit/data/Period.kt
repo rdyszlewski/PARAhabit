@@ -4,5 +4,5 @@ enum class Period(val number: Int){
     DAY(0),
     WEEK(1),
     MONTH(2),
-    TWO_WEEK(3)
+    TWO_WEEKS(3)
 }

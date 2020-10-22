@@ -6,14 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.BaseColumns
 import com.example.parahabit.database.Tables
-import com.example.parahabit.database.DataHelper
+import com.example.parahabit.database.DatabaseHandler
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dbHelper = DataHelper(baseContext);
+        val dbHelper = DatabaseHandler(baseContext);
         val db = dbHelper.writableDatabase;
 //       insertData(db, "Siema", "opis")
         readData(db)
@@ -21,21 +21,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun insertData(db:SQLiteDatabase,name: String, description: String){
         val values = ContentValues().apply {
-            put(Tables.HabitTable.NAME, name)
-            put(Tables.HabitTable.DESCRIPTION, description)
+            put(Tables.Habit.NAME, name)
+            put(Tables.Habit.DESCRIPTION, description)
         }
-        val newRowId = db.insert(Tables.HabitTable.TABLE_NAME, null, values)
+        val newRowId = db.insert(Tables.Habit.TABLE_NAME, null, values)
         println(newRowId)
     }
 
     private fun readData(db:SQLiteDatabase){
-        val projection = arrayOf(BaseColumns._ID, Tables.HabitTable.NAME, Tables.HabitTable.DESCRIPTION)
-        val selection = "${Tables.HabitTable.NAME} =?"
+        val projection = arrayOf(BaseColumns._ID, Tables.Habit.NAME, Tables.Habit.DESCRIPTION)
+        val selection = "${Tables.Habit.NAME} =?"
         val selectionArgs = arrayOf("Siema")
-        val sortOrder = "${Tables.HabitTable.NAME} DESC"
+        val sortOrder = "${Tables.Habit.NAME} DESC"
 
         val cursor = db.query(
-                Tables.HabitTable.TABLE_NAME,
+                Tables.Habit.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
