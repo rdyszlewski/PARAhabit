@@ -1,7 +1,7 @@
 package com.example.parahabit.data
 
 enum class HabitType{
-    NOMARL,
+    NORMAL,
     TIME,
     REPETITIONS,
     QUANTITATIVE
