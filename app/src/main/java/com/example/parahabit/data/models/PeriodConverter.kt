@@ -1,18 +1,19 @@
-package com.example.parahabit.data
+package com.example.parahabit.data.models
 
 import androidx.room.TypeConverter
+import com.example.parahabit.data.models.Period
 import java.lang.IllegalArgumentException
 
 class PeriodConverter{
     companion object{
         @TypeConverter
         @JvmStatic
-        fun toPeriod(periodNumber: Int): Period{
+        fun toPeriod(periodNumber: Int): Period {
             return when(periodNumber){
                 0-> Period.DAY
-                1->Period.WEEK
-                2->Period.MONTH
-                3->Period.TWO_WEEKS
+                1-> Period.WEEK
+                2-> Period.MONTH
+                3-> Period.TWO_WEEKS
                 else -> throw IllegalArgumentException()
             }
         }

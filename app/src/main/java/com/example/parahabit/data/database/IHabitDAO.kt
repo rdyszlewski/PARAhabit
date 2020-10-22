@@ -1,7 +1,7 @@
-package com.example.parahabit.database
+package com.example.parahabit.data.database
 
 import androidx.room.*
-import com.example.parahabit.data.Habit
+import com.example.parahabit.data.models.Habit
 
 @Dao
 interface IHabitDAO{

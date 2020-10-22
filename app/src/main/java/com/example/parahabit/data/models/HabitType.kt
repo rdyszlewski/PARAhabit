@@ -1,4 +1,4 @@
-package com.example.parahabit.data
+package com.example.parahabit.data.models
 
 enum class HabitType{
     NORMAL,

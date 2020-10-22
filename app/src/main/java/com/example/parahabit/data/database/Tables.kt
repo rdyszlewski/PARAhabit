@@ -1,4 +1,4 @@
-package com.example.parahabit.database
+package com.example.parahabit.data.database
 
 import android.provider.BaseColumns
 

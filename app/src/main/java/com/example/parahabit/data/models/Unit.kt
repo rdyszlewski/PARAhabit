@@ -1,4 +1,4 @@
-package com.example.parahabit.data
+package com.example.parahabit.data.models
 
 enum class Unit(val number: Int) {
     NONE(0),

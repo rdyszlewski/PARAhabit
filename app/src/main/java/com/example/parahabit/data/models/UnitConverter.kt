@@ -1,6 +1,7 @@
-package com.example.parahabit.data
+package com.example.parahabit.data.models
 
 import androidx.room.TypeConverter
+import com.example.parahabit.data.models.Unit
 import java.lang.IllegalArgumentException
 
 class UnitConverter{
@@ -8,12 +9,12 @@ class UnitConverter{
     companion object{
         @TypeConverter
         @JvmStatic
-        fun toUnit(unitNumber: Int):Unit{
+        fun toUnit(unitNumber: Int): Unit {
             return when(unitNumber){
-                0->Unit.NONE
-                1->Unit.HOUR
-                2->Unit.MINUTE
-                3->Unit.LITRE
+                0-> Unit.NONE
+                1-> Unit.HOUR
+                2-> Unit.MINUTE
+                3-> Unit.LITRE
                 else -> throw IllegalArgumentException()
             }
         }

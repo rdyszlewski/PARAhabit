@@ -1,13 +1,14 @@
-package com.example.parahabit.data
+package com.example.parahabit.data.models
 
 import androidx.room.TypeConverter
+import com.example.parahabit.data.models.HabitType
 
 class HabitTypeConverter{
 
     companion object{
         @TypeConverter
         @JvmStatic
-        fun toHabitType(habit: Int): HabitType{
+        fun toHabitType(habit: Int): HabitType {
             return when(habit){
                 0-> HabitType.NORMAL
                 1-> HabitType.TIME
