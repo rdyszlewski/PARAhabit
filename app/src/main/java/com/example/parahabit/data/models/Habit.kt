@@ -2,6 +2,7 @@ package com.example.parahabit.data.models
 
 import androidx.annotation.NonNull
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 
@@ -22,5 +23,15 @@ class Habit{
     @TypeConverters(UnitConverter::class)
     var unit: Unit =
         Unit.NONE
+
+    @Ignore
+    var currentAmount: Int = 0;
+
+    @Ignore
+    var executions: List<HabitExecution> = mutableListOf()
+
+    fun isFinished():Boolean{
+        return currentAmount >= goal;
+    }
 
 }
