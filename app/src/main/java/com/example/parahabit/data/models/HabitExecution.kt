@@ -12,7 +12,7 @@ import java.util.*
 class HabitExecution{
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: Long = -1
+    var id: Long = 0
 
     var habit: Long? = null
 

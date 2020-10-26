@@ -8,7 +8,7 @@ import com.example.parahabit.data.models.HabitExecution
 interface IExecutionDAO{
 
     @Insert
-    fun insert(execution: HabitExecution)
+    fun insert(execution: HabitExecution):Long
 
     @Update
     fun update(execution: HabitExecution)
@@ -20,5 +20,8 @@ interface IExecutionDAO{
     fun getAll(): List<HabitExecution>
 
     @Query("SELECT * from executions WHERE  habit =:habit AND date = :date ")
-    fun getFromDate(habit: Long, date: Int): List<HabitExecution>
+    fun getFromDate(habit: Long, date: Int): MutableList<HabitExecution>
+
+    @Query("SELECT * FROM executions WHERE habit=:habit")
+    fun getByHabit(habit: Long):List<HabitExecution>
 }

@@ -28,7 +28,7 @@ class Habit{
     var currentAmount: Int = 0
 
     @Ignore
-    var executions: List<HabitExecution> = mutableListOf()
+    var executions: MutableList<HabitExecution> = mutableListOf()
 
     fun isFinished():Boolean{
         return currentAmount >= goal

@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val listView: RecyclerView = findViewById(R.id.habit_list)
+
         thread {
             val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "PARAbits").build()
 //            createHabits(db)
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createHabits(db: AppDatabase){
         val id1 = addHabit("Pierwszy", HabitType.NORMAL, db)
-        val id2 = addHabit("Drugi",HabitType.QUANTITATIVE, db)
+        val id2 = addHabit("Drugi",HabitType.REPETITIONS, db)
         val id3 = addHabit("Trzeci",HabitType.TIME, db)
         val id4 =addHabit("Czwarty",HabitType.QUANTITATIVE, db)
 
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         habit.name = name
         habit.description = "To jest jakiś opis"
         habit.type = type
-        if(type == HabitType.QUANTITATIVE){
+        if(type == HabitType.REPETITIONS){
             habit.goal = 15
         }
         return db.habitDAO().insert(habit)
