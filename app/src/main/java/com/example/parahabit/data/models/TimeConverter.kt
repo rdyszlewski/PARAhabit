@@ -9,18 +9,18 @@ class TimeConverter{
 
         @TypeConverter
         @JvmStatic
-        fun toNumber(date: Date):Int{
+        fun toNumber(date: Date):Short{
             val calendar = GregorianCalendar()
             calendar.time = date
             val hours = calendar.get(Calendar.HOUR)
             val minutes = calendar.get(Calendar.MINUTE)
             val value = hours * 1000 + minutes
-            return value;
+            return value.toShort()
         }
 
         @TypeConverter
         @JvmStatic
-        fun toTime(number: Int):Date{
+        fun toTime(number: Short):Date{
             val hours = number / 1000
             val minutes = number % 100
             val calendar = GregorianCalendar()

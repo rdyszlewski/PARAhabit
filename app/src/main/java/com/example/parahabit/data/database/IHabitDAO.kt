@@ -6,7 +6,7 @@ import com.example.parahabit.data.models.Habit
 @Dao
 interface IHabitDAO{
     @Insert
-    fun insert(habit: Habit)
+    fun insert(habit: Habit):Long
 
     @Update
     fun update(habit: Habit)
@@ -16,4 +16,5 @@ interface IHabitDAO{
 
     @Query("SELECT * FROM habits")
     fun getAll():List<Habit>
+
 }

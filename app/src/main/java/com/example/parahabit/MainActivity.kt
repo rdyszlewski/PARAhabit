@@ -1,54 +1,65 @@
 package com.example.parahabit
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ListView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.database.AppDatabase
+import com.example.parahabit.data.models.DateConverter
 import com.example.parahabit.data.models.HabitExecution
 import com.example.parahabit.data.models.HabitType
-import com.example.parahabit.habits.HabitListAdapter
+import com.example.parahabit.habits.HabitsAdapter
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    var adapter: HabitListAdapter? = null;
+    var adapter: HabitsAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val listView: ListView = findViewById(R.id.habit_list)
+        val listView: RecyclerView = findViewById(R.id.habit_list)
         thread {
             val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "PARAbits").build()
 //            createHabits(db)
             val habits: List<Habit> = db.habitDAO().getAll()
-            println(habits)
-            Log.v("siema", habits.size.toString())
+            val dateValue = DateConverter.toNumber(Date())
+            for (habit in habits) {
+                habit.executions = db.executionDAO().getFromDate(habit.id, dateValue)
+            }
 
-            adapter = HabitListAdapter(this, habits.toTypedArray(), "Habbits")
+            adapter = HabitsAdapter(habits as ArrayList<Habit>)
             listView.adapter = adapter
-
-            val executions = db.executionDAO().getAll()
-            println("Executions " + executions.size)
         }
     }
 
     private fun createHabits(db: AppDatabase){
-        addHabit("Pierwszy", HabitType.NORMAL, db)
-        addHabit("Drugi",HabitType.TIME, db)
-        addHabit("Trzeci",HabitType.TIME, db)
-        addHabit("Czwarty",HabitType.NORMAL, db)
+        val id1 = addHabit("Pierwszy", HabitType.NORMAL, db)
+        val id2 = addHabit("Drugi",HabitType.QUANTITATIVE, db)
+        val id3 = addHabit("Trzeci",HabitType.TIME, db)
+        val id4 =addHabit("Czwarty",HabitType.QUANTITATIVE, db)
+
+        val execution = HabitExecution()
+        execution.habit = id2 // TODO: przerobić id na long
+        execution.amount = 3
+        execution.date = Date()
+        execution.time = Date()
+        db.executionDAO().insert(execution)
     }
 
-    private fun addHabit(name: String, type: HabitType, db: AppDatabase){
+    private fun addHabit(name: String, type: HabitType, db: AppDatabase):Long{
         val habit = Habit()
         habit.name = name
         habit.description = "To jest jakiś opis"
-        habit.type = type;
-        db.habitDAO().insert(habit)
+        habit.type = type
+        if(type == HabitType.QUANTITATIVE){
+            habit.goal = 15
+        }
+        return db.habitDAO().insert(habit)
     }
 
 

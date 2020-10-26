@@ -10,7 +10,7 @@ import androidx.room.TypeConverters
 class Habit{
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: Int = 0
+    var id: Long = 0
     var name: String = ""
     var description: String = ""
     @TypeConverters(HabitTypeConverter::class)
@@ -25,13 +25,13 @@ class Habit{
         Unit.NONE
 
     @Ignore
-    var currentAmount: Int = 0;
+    var currentAmount: Int = 0
 
     @Ignore
     var executions: List<HabitExecution> = mutableListOf()
 
     fun isFinished():Boolean{
-        return currentAmount >= goal;
+        return currentAmount >= goal
     }
 
 }

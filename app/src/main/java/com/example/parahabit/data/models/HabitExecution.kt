@@ -12,14 +12,14 @@ import java.util.*
 class HabitExecution{
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: Int = -1
-    // TODO: sprawdzić, jak powinno się to robić. Może wystarczy samo id
-    var habit: Int? = null
+    var id: Long = -1
+
+    var habit: Long? = null
 
     @TypeConverters(DateConverter::class)
     var date: Date? = null
 
-    // TODO: prawdopodobnie powinien być tutaj jakiś inny typ
+    // TODO: prawdopodobnie powinien być tutaj jakiś inny typ. MOżna zrobić to w ten sposób, że data przechowywana jest w jednej wartości, a zapisywana w dwóch
     @TypeConverters(TimeConverter::class)
     var time:Date? = null
 
