@@ -1,5 +1,6 @@
 package com.example.parahabit.habits
 
+import android.app.Application
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Handler
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
@@ -19,6 +21,7 @@ import com.example.parahabit.data.database.AppDatabase
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitExecution
 import com.example.parahabit.data.models.HabitType
+import com.example.parahabit.data.repository.Repository
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
@@ -34,6 +37,7 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsA
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsViewHolder {
+
         val type = HabitType.values()[viewType]
         val resourceId = HabitsLayoutResourceFactory.getResource(type)
         val layoutView = LayoutInflater.from(parent.context).inflate(resourceId, parent, false)
@@ -92,6 +96,10 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsA
                     openExecutions(habit!!)
                 }
             }
+            view.setOnLongClickListener {
+                openMenu(habit!!)
+                true
+            }
         }
 
         protected var habit: Habit? = null
@@ -102,6 +110,20 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsA
             val intent = Intent(itemView.context, HabitExecutionsActivity::class.java)
             intent.putExtra("habit", habit.id)
             itemView.context.startActivity(intent)
+        }
+
+        private fun openMenu(habit: Habit){
+            val popupMenu = PopupMenu(itemView.context, itemView)
+            popupMenu.menuInflater.inflate(R.menu.habit_menu, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener ( PopupMenu.OnMenuItemClickListener { item->
+                when(item.itemId){
+                    R.id.remove-> println("Usuwanie")
+                    R.id.edit->println("Edytowanie")
+                    R.id.edit_executions->println("Też edytowanie")
+                }
+                true
+            })
+            popupMenu.show()
         }
     }
 
@@ -169,10 +191,8 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsA
         }
 
         private fun addNewExecution(habit: Habit) {
-            // TODO: można coś wymyślić, aby baza nie była pobierana za każdym razem. Zrobić repository
-            val db = Room.databaseBuilder(itemView.context, AppDatabase::class.java, "PARAbits").build()
             val execution = createHabitExecution(habit, 1)
-            val id = db.executionDAO().insert(execution)
+            val id = Repository.getInstance().getExecutionRepository().insert(execution)
             execution.id = id
             habit.executions.add(execution)
 

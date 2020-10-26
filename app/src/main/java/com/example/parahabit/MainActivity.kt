@@ -1,15 +1,22 @@
 package com.example.parahabit
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.database.AppDatabase
+import com.example.parahabit.data.database.DatabaseRepository
 import com.example.parahabit.data.models.DateConverter
 import com.example.parahabit.data.models.HabitExecution
 import com.example.parahabit.data.models.HabitType
+import com.example.parahabit.data.repository.IRepository
+import com.example.parahabit.data.repository.Repository
 import com.example.parahabit.habits.HabitsAdapter
 import java.util.*
 import kotlin.collections.ArrayList
@@ -17,20 +24,22 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    var adapter: HabitsAdapter? = null
+    private var adapter: HabitsAdapter? = null
+    private var repository: IRepository? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Repository.getInstance().setRepository(DatabaseRepository(applicationContext))
+        repository = Repository.getInstance().getRepository()
         val listView: RecyclerView = findViewById(R.id.habit_list)
-
+        registerForContextMenu(listView) // TOOD:
         thread {
-            val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "PARAbits").build()
-//            createHabits(db)
-            val habits: List<Habit> = db.habitDAO().getAll()
+            createHabits()
+            val habits: List<Habit> = repository!!.getHabitRepository().getAll()
             val dateValue = DateConverter.toNumber(Date())
             for (habit in habits) {
-                habit.executions = db.executionDAO().getFromDate(habit.id, dateValue)
+                habit.executions = repository!!.getExecutionRepository().getByHabitAndDate(habit.id, dateValue)
             }
 
             adapter = HabitsAdapter(habits as ArrayList<Habit>)
@@ -38,21 +47,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createHabits(db: AppDatabase){
-        val id1 = addHabit("Pierwszy", HabitType.NORMAL, db)
-        val id2 = addHabit("Drugi",HabitType.REPETITIONS, db)
-        val id3 = addHabit("Trzeci",HabitType.TIME, db)
-        val id4 =addHabit("Czwarty",HabitType.QUANTITATIVE, db)
+    private fun createHabits(){
+        val id1 = addHabit("Pierwszy", HabitType.NORMAL)
+        val id2 = addHabit("Drugi",HabitType.REPETITIONS)
+        val id3 = addHabit("Trzeci",HabitType.TIME)
+        val id4 =addHabit("Czwarty",HabitType.QUANTITATIVE)
 
-        val execution = HabitExecution()
-        execution.habit = id2 // TODO: przerobić id na long
-        execution.amount = 3
-        execution.date = Date()
-        execution.time = Date()
-        db.executionDAO().insert(execution)
     }
 
-    private fun addHabit(name: String, type: HabitType, db: AppDatabase):Long{
+    private fun addHabit(name: String, type: HabitType):Long{
         val habit = Habit()
         habit.name = name
         habit.description = "To jest jakiś opis"
@@ -60,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         if(type == HabitType.REPETITIONS){
             habit.goal = 15
         }
-        return db.habitDAO().insert(habit)
+        return Repository.getInstance().getHabitRepository().insert(habit)
     }
 
 
