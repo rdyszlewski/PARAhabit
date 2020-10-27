@@ -1,6 +1,7 @@
 package com.example.parahabit.data.models
 
 import androidx.room.TypeConverter
+import com.example.parahabit.R
 import com.example.parahabit.data.models.HabitType
 
 class HabitTypeConverter{
@@ -26,7 +27,16 @@ class HabitTypeConverter{
                 HabitType.TIME-> 1
                 HabitType.REPETITIONS-> 2
                 HabitType.QUANTITATIVE-> 3
+            }
+        }
 
+        // TODO: prawdopdobnie powinno to być w innej klasie
+        fun getStringResource(habitType: HabitType): Int{
+            return when(habitType){
+                HabitType.NORMAL-> R.string.normal_habit
+                HabitType.TIME->R.string.time_habit
+                HabitType.QUANTITATIVE->R.string.quantitative_habit
+                HabitType.REPETITIONS->R.string.repetitions_habit
             }
         }
     }

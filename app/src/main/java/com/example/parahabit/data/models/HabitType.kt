@@ -1,6 +1,8 @@
 package com.example.parahabit.data.models
 
-enum class HabitType{
+import java.io.Serializable
+
+enum class HabitType: Serializable{
     NORMAL,
     TIME,
     REPETITIONS,

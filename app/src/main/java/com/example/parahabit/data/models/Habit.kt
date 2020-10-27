@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import java.io.Serializable
 
 @Entity(tableName="habits")
-class Habit{
+class Habit : Serializable{
     @PrimaryKey(autoGenerate = true)
     @NonNull
     var id: Long = 0

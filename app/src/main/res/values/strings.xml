@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">PARAhabit</string>
+    <string name="normal_habit">Normalne</string>
+    <string name="time_habit">Czasowe</string>
+    <string name="quantitative_habit">Ilościowe</string>
+    <string name="repetitions_habit">Powtórzenia</string>
+
 </resources>

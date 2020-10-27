@@ -1,5 +1,6 @@
 package com.example.parahabit
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,7 @@ import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.data.repository.IRepository
 import com.example.parahabit.data.repository.Repository
 import com.example.parahabit.habits.adapter.HabitsAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: HabitsAdapter
     private lateinit var repository: IRepository
 
+    private lateinit var addButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,15 @@ class MainActivity : AppCompatActivity() {
 
         registerForContextMenu(listView)
         listView.adapter = adapter
+
+        addButton = findViewById(R.id.addHabitButton)
+        addButton.setOnClickListener{openHabitActivity(null)}
+    }
+
+    private fun openHabitActivity(habit: Habit?){
+        val intent = Intent(applicationContext, HabitActivity::class.java)
+        intent.putExtra("habit", habit)
+        startActivity(intent)
     }
 
     private fun loadHabits() {
