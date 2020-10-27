@@ -8,13 +8,12 @@ import com.example.parahabit.data.repository.IRepository
 
 class DatabaseRepository(context: Context) : IRepository {
 
-    private val db: AppDatabase;
+    private val db: AppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "PARAbits").build();
 
     private val habitRepository: IHabitRepository
     private val executionRepository: IExecutionRepository
 
     init {
-        db = Room.databaseBuilder(context, AppDatabase::class.java, "PARAbits").build()
         habitRepository = HabitRepository(db)
         executionRepository = ExecutionRepository(db)
     }
