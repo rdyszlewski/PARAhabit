@@ -14,6 +14,7 @@ class PeriodConverter{
                 1-> Period.WEEK
                 2-> Period.MONTH
                 3-> Period.TWO_WEEKS
+                4->Period.CHOSEN
                 else -> throw IllegalArgumentException()
             }
         }
@@ -26,6 +27,7 @@ class PeriodConverter{
                 Period.WEEK->1
                 Period.MONTH->2
                 Period.TWO_WEEKS->3
+                Period.CHOSEN->4
             }
         }
     }

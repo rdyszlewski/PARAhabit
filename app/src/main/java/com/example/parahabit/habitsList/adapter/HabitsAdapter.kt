@@ -1,4 +1,4 @@
-package com.example.parahabit.habits.adapter
+package com.example.parahabit.habitsList.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

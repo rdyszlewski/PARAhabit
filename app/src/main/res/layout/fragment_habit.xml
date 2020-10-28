@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HabitActivity">
+    tools:context=".habit.activity.HabitActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameLayout"
@@ -38,10 +38,28 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:id="@+id/typeLayout"
+        android:id="@+id/periodLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/descriptionLayout"
+        app:endIconDrawable="@android:drawable/spinner_dropdown_background"
+        android:hint="typ"
+        >
+        <!--        TODO: zrobić tutaj jakiś taki znaczek, że jest to spinner-->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/period"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="false"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:id="@+id/typeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/periodLayout"
         app:endIconDrawable="@android:drawable/spinner_dropdown_background"
         android:hint="typ"
         >

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.parahabit.data.database.AppDatabase
 import com.example.parahabit.data.models.HabitExecution
-import com.example.parahabit.habits.ExecutionsAdapter
+import com.example.parahabit.habit.ExecutionsAdapter
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 

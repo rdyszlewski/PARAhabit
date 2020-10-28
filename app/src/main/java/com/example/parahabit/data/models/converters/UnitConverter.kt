@@ -27,6 +27,7 @@ class UnitConverter{
                 Unit.HOUR->1
                 Unit.MINUTE->2
                 Unit.LITRE->3
+                Unit.KM->4
             }
         }
     }

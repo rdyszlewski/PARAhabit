@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PARAhabit">
-        <activity android:name=".HabitActivity"></activity>
+        <activity android:name=".habit.activity.HabitActivity"></activity>
         <activity android:name=".HabitExecutionsActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".habitsList.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

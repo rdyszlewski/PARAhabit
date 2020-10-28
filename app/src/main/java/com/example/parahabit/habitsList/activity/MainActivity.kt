@@ -1,11 +1,14 @@
-package com.example.parahabit
+package com.example.parahabit.habitsList.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.parahabit.habit.activity.HabitActivity
+import com.example.parahabit.R
 import com.example.parahabit.commands.BulkInsertHabitCommand
 import com.example.parahabit.data.database.DatabaseRepository
 import com.example.parahabit.data.models.converters.DateConverter
@@ -13,7 +16,7 @@ import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.data.repository.IRepository
 import com.example.parahabit.data.repository.Repository
-import com.example.parahabit.habits.adapter.HabitsAdapter
+import com.example.parahabit.habitsList.adapter.HabitsAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun openHabitActivity(habit: Habit?){
         val intent = Intent(applicationContext, HabitActivity::class.java)
         intent.putExtra("habit", habit)
-        startActivity(intent)
+        startActivityForResult(intent, 100) // TODO: dodać tutaj jakąś stałą
     }
 
     private fun loadHabits() {
@@ -66,6 +69,19 @@ class MainActivity : AppCompatActivity() {
             }
             Handler(Looper.getMainLooper()).post {
                 adapter.updateHabits(habits)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            100 -> {
+                if(resultCode == Activity.RESULT_OK){
+                    val habit = data?.getParcelableExtra<Habit>("habit")
+                    // TODO: można też zrobić w ten sposób, że przekazuje id, i pobiera nawyk o określonym id
+                    println(habit?.name)
+                }
             }
         }
     }

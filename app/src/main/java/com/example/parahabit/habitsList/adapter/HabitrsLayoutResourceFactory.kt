@@ -1,4 +1,4 @@
-package com.example.parahabit.habits.adapter
+package com.example.parahabit.habitsList.adapter
 
 import com.example.parahabit.R
 import com.example.parahabit.data.models.HabitType

@@ -9,6 +9,19 @@
     <string name="time_habit">Czasowe</string>
     <string name="quantitative_habit">Ilościowe</string>
     <string name="repetitions_habit">Powtórzenia</string>
+
+    <string name="day_period">Codziennie</string>
+    <string name="week_period">Co tydzień</string>
+    <string name="month_period">Co miesiąc</string>
+    <string name="two_week_period">Co dwa tygodnie</string>
+    <string name="chosen_period">Wybrany</string>
+
+    <string name="none_unit">Brak</string>
+    <string name="minute_unit">Minuty</string>
+    <string name="hour_unit">Godziny</string>
+    <string name="litre_unit">Litry</string>
+    <string name="km_unit">Kilometry</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

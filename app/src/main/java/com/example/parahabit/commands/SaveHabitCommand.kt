@@ -4,7 +4,7 @@ import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.repository.Repository
 import kotlin.concurrent.thread
 
-class InsertHabitCommand(val habit: Habit,val repository: Repository): ICommand {
+class SaveHabitCommand(val habit: Habit, val repository: Repository): ICommand {
 
     private val callback: CommandCallback<Habit> = CommandCallback()
 
@@ -14,7 +14,11 @@ class InsertHabitCommand(val habit: Habit,val repository: Repository): ICommand 
 
     override fun execute() {
         thread {
-            repository.getHabitRepository().insert(habit)
+            if(habit.id == 0L){
+                repository.getHabitRepository().insert(habit)
+            } else {
+                repository.getHabitRepository().update(habit)
+            }
             callback.execute(habit)
         }
     }
