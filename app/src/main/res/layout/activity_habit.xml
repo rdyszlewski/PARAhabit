@@ -6,68 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".HabitActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+    <fragment
+        android:id="@+id/habit_fragment"
+        class="com.example.parahabit.HabitFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:hint="nazwa"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/descriptionLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="opis"
-        app:layout_constraintTop_toBottomOf="@id/nameLayout">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/habit_fragment">
 
-    <com.google.android.material.textfield.TextInputLayout        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:id="@+id/typeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/descriptionLayout"
-        app:endIconDrawable="@android:drawable/spinner_dropdown_background"
-        android:hint="typ"
-        >
-<!--        TODO: zrobić tutaj jakiś taki znaczek, że jest to spinner-->
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:editable="false"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"-->
-<!--        android:id="@+id/typeLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/descriptionLayout"-->
-<!--        android:hint="typ">-->
-
-<!--        <AutoCompleteTextView-->
-<!--            android:id="@+id/type"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:editable="false"/>-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
-
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

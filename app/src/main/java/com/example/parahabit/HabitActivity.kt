@@ -2,6 +2,7 @@ package com.example.parahabit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.data.resources.HabitTypeResource
@@ -21,9 +22,34 @@ class HabitActivity : AppCompatActivity() {
     }
 
     private fun initTypes(){
+        // TODO: to raczej powinno być w fragmencie
         val typesView = findViewById<TextInputEditText>(R.id.type)
         typeOptions = OptionsView(typesView, HabitTypeResource())
         // TODO: dlaczego nie wstawić tego od razu do konstruktora?
-        typeOptions.init(habit, "Wybierz typ", {type->habit.type = type})
+        typeOptions.init(habit, "Wybierz typ", {type->changeType(type)})
+    }
+
+    private fun changeType(type:HabitType){
+        habit.type = type
+        changeFragment(getFragment(type))
+
+    }
+
+    private fun getFragment(type:HabitType):Fragment{
+        // TODO: zaktualizować to
+        return when(type){
+            HabitType.NORMAL->RepetitionsHabitFragment()
+            HabitType.TIME-> TimeHabitFragment()
+            HabitType.REPETITIONS->RepetitionsHabitFragment()
+            HabitType.QUANTITATIVE->TimeHabitFragment()
+        }
+    }
+
+    private fun changeFragment(fragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
