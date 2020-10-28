@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.commands.BulkInsertHabitCommand
 import com.example.parahabit.data.database.DatabaseRepository
-import com.example.parahabit.data.models.DateConverter
+import com.example.parahabit.data.models.converters.DateConverter
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.data.repository.IRepository

@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">PARAhabit</string>
+    <string name="cancel">Anuluj</string>
+    <string name="ok">OK</string>
+    <string name="close">Zamknij</string>
+    <string name="accept">Akceptuj</string>
+
     <string name="normal_habit">Normalne</string>
     <string name="time_habit">Czasowe</string>
     <string name="quantitative_habit">Ilościowe</string>

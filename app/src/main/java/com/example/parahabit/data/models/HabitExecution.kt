@@ -2,6 +2,8 @@ package com.example.parahabit.data.models
 
 import androidx.annotation.NonNull
 import androidx.room.*
+import com.example.parahabit.data.models.converters.DateConverter
+import com.example.parahabit.data.models.converters.TimeConverter
 import java.util.*
 
 @Entity(tableName="executions",

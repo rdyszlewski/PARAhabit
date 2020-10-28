@@ -1,5 +1,6 @@
 package com.example.parahabit.data.models
 
+import com.example.parahabit.data.models.converters.DateConverter
 import org.junit.Test
 import org.junit.Assert;
 import java.util.*

@@ -1,4 +1,4 @@
-package com.example.parahabit.data.models
+package com.example.parahabit.data.models.converters
 
 import androidx.room.TypeConverter
 import java.util.*

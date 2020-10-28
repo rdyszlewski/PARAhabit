@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.parahabit.data.models.converters.HabitTypeConverter
+import com.example.parahabit.data.models.converters.PeriodConverter
+import com.example.parahabit.data.models.converters.UnitConverter
 import java.io.Serializable
 
 @Entity(tableName="habits")
