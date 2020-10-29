@@ -25,16 +25,24 @@ class Habit() : Parcelable{
     @TypeConverters(PeriodConverter::class)
     var period: Period =
         Period.DAY
-    var goal: Int = 0
+    var goal: Int = 1
     @TypeConverters(UnitConverter::class)
     var unit: Unit =
         Unit.NONE
 
     @Ignore
-    var currentAmount: Int = 0
+    var currentAmount: Int = 0 // TODO: pomyśleć co z tym zrobić
 
     @Ignore
     var executions: MutableList<HabitExecution> = mutableListOf()
+
+    fun getExecutionsValue(): Int{
+        var sum = 0
+        for(execution in executions){
+            sum += execution.amount
+        }
+        return sum
+    }
 
     constructor(parcel: Parcel) : this() {
         id = parcel.readLong()
@@ -47,7 +55,7 @@ class Habit() : Parcelable{
     }
 
     fun isFinished():Boolean{
-        return currentAmount >= goal
+        return getExecutionsValue() >= goal
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

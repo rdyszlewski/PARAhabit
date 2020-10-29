@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
+import com.example.parahabit.timer.Timer
 
 
 class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsViewHolder>() {
@@ -20,7 +21,7 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsV
         val type = HabitType.values()[viewType]
         val resourceId = HabitsLayoutResourceFactory.getResource(type)
         val layoutView = LayoutInflater.from(parent.context).inflate(resourceId, parent, false)
-        return HabitsViewHolderFactory.create(type, layoutView)
+        return HabitsViewHolderFactory.create(type, layoutView, Timer()) // TODO: coś tutaj jest nie tak. Przemysleć jak to rozwiązać
     }
 
     override fun getItemViewType(position: Int): Int {
