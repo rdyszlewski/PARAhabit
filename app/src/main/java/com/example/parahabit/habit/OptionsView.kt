@@ -67,7 +67,6 @@ class OptionsView<T> private constructor() where T : Enum<T>, T : ResourceEnum {
                 .setOnDismissListener {
                     view.clearFocus()
                 }.show()
-
     }
 
     private fun setValue(which: Int): T {
