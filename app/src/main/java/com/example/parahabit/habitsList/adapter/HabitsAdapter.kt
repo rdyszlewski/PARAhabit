@@ -2,6 +2,8 @@ package com.example.parahabit.habitsList.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
@@ -10,14 +12,20 @@ import com.example.parahabit.timer.Timer
 
 class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsViewHolder>() {
 
+    private val filteredList: MutableList<Habit> = ArrayList()
+    private var lastFilter: Boolean = false
+
+
     fun updateHabits(newHabits: List<Habit>) {
+        // TODO: sprawdzić, czy to jest wykorzystywane
         habits.clear()
         habits = newHabits as ArrayList<Habit>
+        filter(false)
         updateView()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsViewHolder {
-
+        println("OnCreateViewHolder")
         val type = HabitType.values()[viewType]
         val resourceId = HabitsLayoutResourceFactory.getResource(type)
         val layoutView = LayoutInflater.from(parent.context).inflate(resourceId, parent, false)
@@ -25,17 +33,41 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsV
     }
 
     override fun getItemViewType(position: Int): Int {
-        val habit = habits[position]
+        val habit = filteredList[position]
         return habit.type.ordinal
     }
 
     override fun onBindViewHolder(holder: HabitsViewHolder, position: Int) {
-        holder.bind(habits[position])
+        println("OnBindViewHolder")
+//        holder.bind(habits[position])
+        holder.bind(filteredList[position])
     }
 
     fun updateView() {
+        // TODO: tutaj też można zrobić filtrowanie
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = habits.size
+    fun addHabit(habit:Habit){
+        habits.add(habit)
+        filter(lastFilter)
+    }
+
+    fun removeHabit(habit: Habit){
+        habits.remove(habit)
+        filter(lastFilter)
+    }
+
+    fun filter(undone: Boolean){
+        lastFilter = undone
+        filteredList.clear()
+        if(undone){
+            filteredList.addAll(habits.filter { !it.isFinished() })
+        } else {
+            filteredList.addAll(habits)
+        }
+        updateView()
+    }
+
+    override fun getItemCount() = filteredList.size
 }

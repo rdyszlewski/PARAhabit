@@ -17,6 +17,7 @@ import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.data.repository.IRepository
 import com.example.parahabit.data.repository.Repository
 import com.example.parahabit.habitsList.adapter.HabitsAdapter
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import kotlin.collections.ArrayList
@@ -28,8 +29,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var repository: IRepository
 
     private lateinit var addButton: FloatingActionButton
+    private lateinit var filterButton: MaterialButton
+    private var filtered: Boolean = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("Tworzenie aktywności")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initView()
@@ -52,6 +56,12 @@ class MainActivity : AppCompatActivity() {
 
         addButton = findViewById(R.id.addHabitButton)
         addButton.setOnClickListener{openHabitActivity(null)}
+
+        filterButton = findViewById(R.id.filter_button)
+        filterButton.setOnClickListener {
+            filtered = !filtered
+            adapter.filter(filtered)
+        }
     }
 
     private fun openHabitActivity(habit: Habit?){
@@ -79,11 +89,31 @@ class MainActivity : AppCompatActivity() {
             100 -> {
                 if(resultCode == Activity.RESULT_OK){
                     val habit = data?.getParcelableExtra<Habit>("habit")
+                    if(habit!= null){
+                        adapter.addHabit(habit)
+                    }
                     // TODO: można też zrobić w ten sposób, że przekazuje id, i pobiera nawyk o określonym id
                     println(habit?.name)
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        println("Niszczenie aktywności")
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        println("Schowanie aktywności")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        adapter.updateView()
+        println("Wznawianie aktywności")
     }
 
     private fun createHabits() {

@@ -27,12 +27,20 @@ class TimeHabitsViewHolder(private val view: View) : HabitsViewHolder(view), ITi
     private var timer: Timer? = null
 
     override fun bind(habit: Habit) {
+        println("Bind TimeHabitsViewHolder")
+        if(timer == null){
+            val application = view.context.applicationContext as HabitApplication
+            timer = application.timer
+            if(timer!!.getHabit() != null  && timer!!.getHabit()!!.id== habit.id){
+                println("Udało się :) ")
+                timer?.subscribe(this)
+            }
+        }
         this.habit = habit
         nameText.text = habit.name
         startButton.setOnClickListener{
             println("Bindowanko")
-            val application = view.context.applicationContext as HabitApplication
-            timer = application.timer
+
             // TODO: to powinno być
 
             // TODO: coś mi isę wydaje, że może być problem z ponownym połączeniem tego po zmianie aplikacji

@@ -74,4 +74,8 @@ class HabitActivity : AppCompatActivity() {
         transaction.addToBackStack(null)
         transaction.commit()
     }
+
+    override fun onBackPressed() {
+        finish()
+    }
 }

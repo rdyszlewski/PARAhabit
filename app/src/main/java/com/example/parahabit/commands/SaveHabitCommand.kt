@@ -15,7 +15,8 @@ class SaveHabitCommand(val habit: Habit, val repository: Repository): ICommand {
     override fun execute() {
         thread {
             if(habit.id == 0L){
-                repository.getHabitRepository().insert(habit)
+                val id =repository.getHabitRepository().insert(habit)
+                habit.id = id
             } else {
                 repository.getHabitRepository().update(habit)
             }

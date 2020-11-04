@@ -48,8 +48,12 @@ class Habit() : Parcelable{
         id = parcel.readLong()
         name = parcel.readString().toString() // TODO: sprawdzić, czy to ma sens
         description = parcel.readString().toString() // TODO: sprawdzić, czy to ma sens
+        type = HabitType.values()[parcel.readInt()]
+        period = Period.values()[parcel.readInt()]
         goal = parcel.readInt()
+        unit = Unit.values()[parcel.readInt()]
         currentAmount = parcel.readInt()
+
 
         // TODO: nie ma enumów. Czy to dobrze?
     }
@@ -62,7 +66,10 @@ class Habit() : Parcelable{
         parcel.writeLong(id)
         parcel.writeString(name)
         parcel.writeString(description)
+        parcel.writeInt(type.ordinal)
+        parcel.writeInt(period.ordinal)
         parcel.writeInt(goal)
+        parcel.writeInt(unit.ordinal)
         parcel.writeInt(currentAmount)
     }
 
