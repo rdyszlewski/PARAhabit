@@ -1,19 +1,20 @@
 package com.example.parahabit.habitsList.adapter
 
-import android.app.Activity
 import android.graphics.Color
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.parahabit.HabitApplication
 import com.example.parahabit.R
 import com.example.parahabit.commands.AddExecutionCommand
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.repository.Repository
+import com.example.parahabit.timer.ITimerCallback
 import com.example.parahabit.timer.Timer
 import com.google.android.material.button.MaterialButton
 
 // TODO: zz godzinami prawdopodobnie będzie trzeba zrobić jakiś przelicznik
-class TimeHabitsViewHolder(private val view: View, private val timer: Timer) : HabitsViewHolder(view) {
+class TimeHabitsViewHolder(private val view: View) : HabitsViewHolder(view), ITimerCallback {
 
     private val nameText = view.findViewById<TextView>(R.id.name)
     private val doneText = view.findViewById<TextView>(R.id.done_text)
@@ -23,20 +24,42 @@ class TimeHabitsViewHolder(private val view: View, private val timer: Timer) : H
     private val progressBar = view.findViewById<ProgressBar>(R.id.progress)
     private val timeText = view.findViewById<TextView>(R.id.time_text)
 
+    private var timer: Timer? = null
+
     override fun bind(habit: Habit) {
         this.habit = habit
         nameText.text = habit.name
         startButton.setOnClickListener{
-            if(timer.started){
-                stopTimer(habit)
+            println("Bindowanko")
+            val application = view.context.applicationContext as HabitApplication
+            timer = application.timer
+            // TODO: to powinno być
+
+            // TODO: coś mi isę wydaje, że może być problem z ponownym połączeniem tego po zmianie aplikacji
+
+            // TODO: tutaj powinno być jeszcze sprawdzenie, czy habit jest odpowiedni
+
+            if(timer!!.getHabit() == habit){
+                if(timer!!.state != Timer.TimerState.STARTED){
+//                    timer!!.setHabit(habit)
+                    timer!!.subscribe(this)
+                    startTimer()
+                } else {
+                    stopTimer(habit) // TODO: czy to jest potrzebne
+                }
             } else {
+//                timer!!.setHabit(habit)
+                timer!!.subscribe(this)
                 startTimer()
             }
-            setTimerState(timer.started)
+
+            setTimerState(timer!!.state == Timer.TimerState.STARTED)
+
         }
         progressBar.max = habit.goal
-        updateTimeText(habit)
+        updateView(habit)
         setDone(habit.isFinished())
+
     }
 
     private fun updateTimeText(habit:Habit){
@@ -56,17 +79,12 @@ class TimeHabitsViewHolder(private val view: View, private val timer: Timer) : H
     }
 
     private fun startTimer(){
-        timer.start()
-        // TODO: rozpoczęcie odliczania
+        println("start timer")
+        this.timer?.start(habit!!)
     }
 
     private fun stopTimer(habit: Habit){
-        timer.stop()
-        val time = timer.getTime()
-
-        val command = AddExecutionCommand(habit, time, Repository.getInstance())
-        command.setCallback { updatedHabit -> updateView(updatedHabit) }
-        command.execute()
+        timer!!.stop()
     }
 
     private fun updateView(habit:Habit){
@@ -87,5 +105,27 @@ class TimeHabitsViewHolder(private val view: View, private val timer: Timer) : H
             editTimeButton.visibility = View.VISIBLE
             view.setBackgroundColor(Color.WHITE)
         }
+    }
+
+    override fun onTick(time: Long) {
+        val value = habit!!.goal - time
+        updateTime(value)
+    }
+
+    override fun onFinish() {
+        println("Zakończyłem zadanie")
+        setTimerState(false)
+        timer!!.unsubscribe(this)
+
+    }
+
+    override fun getTimerHabit(): Habit {
+        return habit!!
+    }
+
+    private fun updateTime(time: Long){
+        progressBar.progress = time.toInt()
+        // TODO: zmienić zasób napisu, tak, żeby korzystał z placeholders
+        timeText.text = time.toString() + "/" + habit!!.goal
     }
 }

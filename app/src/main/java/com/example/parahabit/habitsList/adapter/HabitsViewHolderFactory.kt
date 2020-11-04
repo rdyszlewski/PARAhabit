@@ -8,10 +8,10 @@ import java.lang.IllegalArgumentException
 class HabitsViewHolderFactory {
 
     companion object {
-        fun create(type: HabitType, view: View, timer: Timer): HabitsViewHolder {
+        fun create(type: HabitType, view: View): HabitsViewHolder {
             return when (type) {
                 HabitType.NORMAL -> StandardHabitsViewHolder(view)
-                HabitType.TIME -> TimeHabitsViewHolder(view, timer) // TODO: chyba tak nie powinno być. To powinno raczej pobierać ten licznik ze systemu
+                HabitType.TIME -> TimeHabitsViewHolder(view) // TODO: chyba tak nie powinno być. To powinno raczej pobierać ten licznik ze systemu
                 HabitType.REPETITIONS -> RepetitionsHabitsViewHolder(view)
                 HabitType.QUANTITATIVE -> QuantitativeHabitsViewHolder(view)
                 else -> throw IllegalArgumentException()

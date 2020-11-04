@@ -81,11 +81,11 @@ class NumberDialog(private val context: Context, private val viewResource: Int, 
     private fun validate(input:TextInputEditText):Boolean{
         val text = input.text
         if(text!!.isNotEmpty()){
-            if(min != 0  && max != 0){
+            return if(min != 0  && max != 0){
                 val value = text.toString().toInt()
-                return value in min..max
+                value in min..max
             } else {
-                return true
+                true
             }
         }
         return false
