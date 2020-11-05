@@ -142,6 +142,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: zrobić to jakoś inaczej
+    fun removeHabit(habit: Habit){
+        adapter.removeHabit(habit)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         println("Niszczenie aktywności")

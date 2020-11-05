@@ -7,7 +7,9 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.HabitExecutionsActivity
 import com.example.parahabit.R
+import com.example.parahabit.commands.RemoveHabitCommand
 import com.example.parahabit.data.models.Habit
+import com.example.parahabit.data.repository.Repository
 import com.example.parahabit.habit.activity.HabitActivity
 import com.example.parahabit.habitsList.activity.MainActivity
 
@@ -42,7 +44,7 @@ abstract class HabitsViewHolder(protected val view: View, protected val context:
         popupMenu.menuInflater.inflate(R.menu.habit_menu, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.remove -> println("Usuwanie")
+                R.id.remove -> remove(habit)
                 R.id.edit -> edit(habit)
                 R.id.edit_executions -> println("Też edytowanie")
             }
@@ -52,7 +54,9 @@ abstract class HabitsViewHolder(protected val view: View, protected val context:
     }
 
     private fun remove(habit: Habit){
-
+        val command = RemoveHabitCommand(habit, Repository.getInstance(), context)
+        command.setCallback { habit->(context as MainActivity).removeHabit(habit) }
+        command.execute()
     }
 
     private fun edit(habit: Habit){
@@ -61,8 +65,5 @@ abstract class HabitsViewHolder(protected val view: View, protected val context:
         intent.putExtra("habit", habit)
         // TODO: teraz nie wiem, jak to zrobić. Może to powinno być w jakimś innym miejsccu
         (context as MainActivity).startActivityForResult(intent, 200)
-//        view.context.startActivity(intent) // TODO: tutaj powinno być uruchomienie aktywności z otrzymaniem wyniku
     }
-
-
 }
