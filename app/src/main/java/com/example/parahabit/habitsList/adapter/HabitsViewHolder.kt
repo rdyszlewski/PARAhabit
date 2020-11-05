@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.HabitExecutionsActivity
 import com.example.parahabit.R
+import com.example.parahabit.commands.AddExecutionCommand
 import com.example.parahabit.commands.RemoveHabitCommand
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.repository.Repository
@@ -30,14 +32,35 @@ abstract class HabitsViewHolder(protected val view: View, protected val context:
     protected var habit: Habit? = null
 
     abstract fun bind(habit: Habit)
+    protected abstract fun updateViewHolder(habit: Habit)
+    protected abstract fun setDone(done: Boolean)
 
     private fun openExecutions(habit: Habit) {
-        val intent = Intent(itemView.context, HabitExecutionsActivity::class.java)
+        val intent = Intent(context, HabitExecutionsActivity::class.java)
         intent.putExtra("habit", habit.id)
-        itemView.context.startActivity(intent)
+        context.startActivity(intent)
     }
 
-    //
+    protected fun addExecution(habit:Habit, amount: Int){
+        val command = AddExecutionCommand(habit, amount, Repository.getInstance())
+        command.setCallback { updatedHabit->updateView(updatedHabit) }
+        command.execute()
+    }
+
+    protected fun updateAmountText(habit:Habit, view: TextView){
+        val amount = habit.getExecutionsValue()
+        updateAmountText(amount.toLong(), habit, view)
+    }
+
+    protected fun updateAmountText(amount: Long, habit:Habit, view: TextView){
+        val text = "${amount}/${habit.goal}"
+        view.text = text
+    }
+
+    protected fun updateView(habit:Habit){
+        updateViewHolder(habit)
+        setDone(habit.isFinished())
+    }
 
     private fun openMenu(habit: Habit) {
         val popupMenu = PopupMenu(itemView.context, itemView)

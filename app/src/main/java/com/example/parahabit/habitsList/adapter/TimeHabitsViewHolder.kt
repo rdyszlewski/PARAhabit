@@ -7,9 +7,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.parahabit.HabitApplication
 import com.example.parahabit.R
-import com.example.parahabit.commands.AddExecutionCommand
 import com.example.parahabit.data.models.Habit
-import com.example.parahabit.data.repository.Repository
 import com.example.parahabit.timer.ITimerCallback
 import com.example.parahabit.timer.Timer
 import com.google.android.material.button.MaterialButton
@@ -25,58 +23,52 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
     private val progressBar = view.findViewById<ProgressBar>(R.id.progress)
     private val timeText = view.findViewById<TextView>(R.id.time_text)
 
+    private val doneHelper = DoneViewHelper.Builder(view).setDoneText(doneText)
+            .setInvisibleViews(listOf(startButton, editTimeButton)).build()
+
     private var timer: Timer? = null
 
     override fun bind(habit: Habit) {
-        println("Bind TimeHabitsViewHolder")
-        if(timer == null){
-            val application = view.context.applicationContext as HabitApplication
-            timer = application.timer
-            if(timer!!.getHabit() != null  && timer!!.getHabit()!!.id== habit.id){
-                println("Udało się :) ")
-                timer?.subscribe(this)
-            }
+        if (timer == null) {
+            initTimer(habit)
         }
         this.habit = habit
         nameText.text = habit.name
-        startButton.setOnClickListener{
-            println("Bindowanko")
-
-            // TODO: to powinno być
-
-            // TODO: coś mi isę wydaje, że może być problem z ponownym połączeniem tego po zmianie aplikacji
-
-            // TODO: tutaj powinno być jeszcze sprawdzenie, czy habit jest odpowiedni
-
-            if(timer!!.getHabit() == habit){
-                if(timer!!.state != Timer.TimerState.STARTED){
-//                    timer!!.setHabit(habit)
-                    timer!!.subscribe(this)
-                    startTimer()
-                } else {
-                    stopTimer(habit) // TODO: czy to jest potrzebne
-                }
-            } else {
-//                timer!!.setHabit(habit)
-                timer!!.subscribe(this)
-                startTimer()
-            }
-
-            setTimerState(timer!!.state == Timer.TimerState.STARTED)
-
+        startButton.setOnClickListener {
+            onTimerClick(habit)
         }
         progressBar.max = habit.goal
         updateView(habit)
-        setDone(habit.isFinished())
-
     }
 
-    private fun updateTimeText(habit:Habit){
-        // TODO: wprowadzić placeholders
-        timeText.text = habit.getExecutionsValue().toString() + "/" + habit.goal
+    private fun onTimerClick(habit: Habit) {
+        if (isActiveHabit(habit)) {
+            if (!isTimerStarted()) {
+                startTimer()
+            } else {
+                stopTimer(habit)
+            }
+        } else {
+            startTimer()
+        }
+        setTimerState(isTimerStarted())
     }
 
+    private fun isTimerStarted() = timer!!.state == Timer.TimerState.STARTED
 
+    private fun isActiveHabit(habit: Habit) :Boolean{
+        return timer!!.getHabit() != null
+                && timer!!.getHabit()!!.id == habit.id
+    }
+
+    private fun initTimer(habit: Habit) {
+        val application = view.context.applicationContext as HabitApplication
+        timer = application.timer
+        if (timer!!.getHabit() != null && isActiveHabit(habit)) {
+            // if timer is already running, we must subscribe events for this habit
+            timer?.subscribe(this)
+        }
+    }
     private fun setTimerState(started: Boolean){
         if(started){
             startButton.text = "X" // TODO: wymyślić później coś lepszego
@@ -88,7 +80,7 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
     }
 
     private fun startTimer(){
-        println("start timer")
+        timer!!.subscribe(this)
         this.timer?.start(habit!!)
     }
 
@@ -96,24 +88,13 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
         timer!!.stop()
     }
 
-    private fun updateView(habit:Habit){
+    override fun updateViewHolder(habit:Habit){
         progressBar.progress = habit.getExecutionsValue()
-        updateTimeText(habit)
-        setDone(habit.isFinished())
+        updateAmountText(habit, timeText)
     }
 
-    private fun setDone(done:Boolean){
-        if(done){
-            doneText.visibility = View.VISIBLE
-            startButton.visibility = View.INVISIBLE // TODO: sprawdzić, jak to będzie wyglądało z napisaem ukończone
-            editTimeButton.visibility = View.INVISIBLE
-            view.setBackgroundColor(Color.GREEN)
-        } else {
-            doneText.visibility = View.GONE
-            startButton.visibility = View.VISIBLE
-            editTimeButton.visibility = View.VISIBLE
-            view.setBackgroundColor(Color.WHITE)
-        }
+    override fun setDone(done:Boolean){
+       doneHelper.setDone(done)
     }
 
     override fun onTick(time: Long) {
@@ -121,11 +102,12 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
         updateTime(value)
     }
 
-    override fun onFinish() {
-        println("Zakończyłem zadanie")
+    override fun onFinish(time: Long) {
+        // TODO: to może być dość niepewne, przy wielu widokach może wystepować problem
+        addExecution(habit!!, time.toInt())
         setTimerState(false)
         timer!!.unsubscribe(this)
-
+        updateView(habit!!)
     }
 
     override fun getTimerHabit(): Habit {
@@ -134,7 +116,6 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
 
     private fun updateTime(time: Long){
         progressBar.progress = time.toInt()
-        // TODO: zmienić zasób napisu, tak, żeby korzystał z placeholders
-        timeText.text = time.toString() + "/" + habit!!.goal
+        updateAmountText(time, habit!!, timeText)
     }
 }

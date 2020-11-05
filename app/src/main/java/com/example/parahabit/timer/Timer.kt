@@ -36,7 +36,7 @@ class Timer(private val context: Context) {
                     onTimerTick(time)
                 }
 
-                override fun onFinish() {
+                override fun onFinish(time:Long) {
                     onTimerFinish()
                 }
 
@@ -69,7 +69,7 @@ class Timer(private val context: Context) {
         println(callbacks.size)
         callbacks.forEach{
             if(it.getTimerHabit()==habit){
-                it.onFinish()
+                it.onFinish(currentTime)
             }
         }
         unsubscribedCallbacks.forEach{callbacks.remove(it)}
@@ -77,7 +77,7 @@ class Timer(private val context: Context) {
         println(unsubscribedCallbacks.size)
         unsubscribedCallbacks.clear()
 
-        saveInDatabase()
+//        saveInDatabase()
         state = TimerState.STOPPED
         currentTime = 0
     }

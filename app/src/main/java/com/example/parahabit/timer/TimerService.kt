@@ -11,7 +11,7 @@ import com.example.parahabit.data.models.Habit
 
 interface ITimerCallback{
     fun onTick(time: Long)
-    fun onFinish()
+    fun onFinish(time: Long)
     fun getTimerHabit(): Habit?
 }
 
@@ -55,7 +55,7 @@ class TimerService: Service() {
 
             override fun onFinish() {
                 println("Zakończono odliczanie")
-                callback?.onFinish()
+                callback?.onFinish(0)
             }
         }
         timer.start()
