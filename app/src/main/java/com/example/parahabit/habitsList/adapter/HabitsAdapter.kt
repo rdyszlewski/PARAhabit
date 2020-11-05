@@ -1,16 +1,18 @@
 package com.example.parahabit.habitsList.adapter
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
+
 import androidx.recyclerview.widget.RecyclerView
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.models.HabitType
 import com.example.parahabit.timer.Timer
 
 
-class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsViewHolder>() {
+class HabitsAdapter(var habits: ArrayList<Habit>, private val context: Activity) : RecyclerView.Adapter<HabitsViewHolder>()  {
 
     private val filteredList: MutableList<Habit> = ArrayList()
     private var lastFilter: Boolean = false
@@ -28,8 +30,8 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsV
         println("OnCreateViewHolder")
         val type = HabitType.values()[viewType]
         val resourceId = HabitsLayoutResourceFactory.getResource(type)
-        val layoutView = LayoutInflater.from(parent.context).inflate(resourceId, parent, false)
-        return HabitsViewHolderFactory.create(type, layoutView) // TODO: coś tutaj jest nie tak. Przemysleć jak to rozwiązać
+        val layoutView = LayoutInflater.from(context).inflate(resourceId, parent, false)
+        return HabitsViewHolderFactory.create(type, layoutView, context) // TODO: coś tutaj jest nie tak. Przemysleć jak to rozwiązać
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -50,6 +52,12 @@ class HabitsAdapter(var habits: ArrayList<Habit>) : RecyclerView.Adapter<HabitsV
 
     fun addHabit(habit:Habit){
         habits.add(habit)
+        filter(lastFilter)
+    }
+
+    fun replaceHabit(habit: Habit){
+        val index = habits.indexOfFirst { it.id == habit.id }
+        habits.set(index, habit)
         filter(lastFilter)
     }
 

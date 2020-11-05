@@ -37,4 +37,8 @@ class StandardHabitFragment : Fragment(), IHabitFragment {
     override fun setupHabit(habit: Habit) {
 
     }
+
+    fun setView(habit: Habit) {
+
+    }
 }

@@ -18,7 +18,7 @@ class OptionsView<T> private constructor() where T : Enum<T>, T : ResourceEnum {
     private var checkedType = 0
     private var actualValue: T? = null
 
-    private fun setActualValue(value: T) {
+    fun setActualValue(value: T) {
         actualValue = value
         runCallback(actualValue)
     }
@@ -69,7 +69,7 @@ class OptionsView<T> private constructor() where T : Enum<T>, T : ResourceEnum {
                 }.show()
     }
 
-    private fun setValue(which: Int): T {
+     private fun setValue(which: Int): T {
         val value = values[which]
         actualValue = value
         checkedType = which

@@ -22,6 +22,8 @@ class HabitFragment : Fragment() {
     private lateinit var periodOptions: OptionsView<Period>
     private lateinit var fragmentView: View
 
+    private var habit: Habit? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,6 +37,7 @@ class HabitFragment : Fragment() {
     }
 
     fun init(habit: Habit,callback: (type:HabitType)->Unit){
+        this.habit = habit
         typeOptions = OptionsView.Builder<HabitType>()
                 .setView(fragmentView.findViewById(R.id.type))
                 .setTitle("Wybierz typ").setValues(HabitType.values())
@@ -52,11 +55,13 @@ class HabitFragment : Fragment() {
 
     fun getHabit():Habit{
         // TODO: utworzenie
-        val habit = Habit()
-        habit.name = name.text.toString()
-        habit.description = description.text.toString()
-        habit.type = typeOptions.getValue()
-        return habit
+        if(habit == null){
+            habit = Habit()
+        }
+        habit!!.name = name.text.toString()
+        habit!!.description = description.text.toString()
+        habit!!.type = typeOptions.getValue()
+        return habit as Habit
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

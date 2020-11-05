@@ -1,5 +1,6 @@
 package com.example.parahabit.habitsList.adapter
 
+import android.app.Activity
 import android.graphics.Color
 import android.opengl.Visibility
 import android.view.View
@@ -12,7 +13,7 @@ import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.repository.Repository
 import com.google.android.material.button.MaterialButton
 
-class StandardHabitsViewHolder(private val view: View) : HabitsViewHolder(view) {
+class StandardHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context) {
 
     private val name = view.findViewById<TextView>(R.id.name)
     private val doneText = view.findViewById<TextView>(R.id.done_text)

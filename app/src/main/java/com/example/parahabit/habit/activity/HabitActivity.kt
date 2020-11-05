@@ -24,7 +24,13 @@ class HabitActivity : AppCompatActivity() {
     private val fragmentFactory = HabitFragmentFactory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        habit = Habit()
+
+        val currentHabit = intent.getParcelableExtra<Habit>("habit")
+        if(currentHabit==null){
+            habit = Habit()
+        } else {
+            habit = currentHabit
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_habit)
         initView()
@@ -57,14 +63,23 @@ class HabitActivity : AppCompatActivity() {
     }
 
     private fun initFragments(){
+        val bundle = Bundle()
+        bundle.putParcelable("habit", habit)
         mainFragment = supportFragmentManager.findFragmentById(R.id.habit_fragment) as HabitFragment
         mainFragment.init(habit) { type -> changeType(type) }
+
+        changeType(habit.type)
     }
 
     private fun changeType(type:HabitType){
         val fragment = fragmentFactory.getFragment(type)
+        val bundle = Bundle()
+        bundle.putParcelable("habit", habit)
+        fragment.arguments = bundle
         changeFragment(fragment)
         secondFragment = fragment as IHabitFragment
+
+        // TODO: to będzie trzeba zrobić jakoś inaczej
     }
 
     private fun changeFragment(fragment: Fragment){

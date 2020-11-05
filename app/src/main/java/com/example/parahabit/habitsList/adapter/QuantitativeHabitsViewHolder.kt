@@ -1,5 +1,6 @@
 package com.example.parahabit.habitsList.adapter
 
+import android.app.Activity
 import android.graphics.Color
 import android.view.View
 import android.widget.ProgressBar
@@ -12,7 +13,7 @@ import com.example.parahabit.habit.NumberDialog
 import com.google.android.material.button.MaterialButton
 
 
-class QuantitativeHabitsViewHolder(val view: View) : HabitsViewHolder(view) {
+class QuantitativeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context) {
 
     private val nameText = view.findViewById<TextView>(R.id.name)
     private val amountText = view.findViewById<TextView>(R.id.amount)

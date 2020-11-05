@@ -1,5 +1,6 @@
 package com.example.parahabit.habitsList.adapter
 
+import android.app.Activity
 import android.graphics.Color
 import android.view.View
 import android.widget.ProgressBar
@@ -14,7 +15,7 @@ import com.example.parahabit.timer.Timer
 import com.google.android.material.button.MaterialButton
 
 // TODO: zz godzinami prawdopodobnie będzie trzeba zrobić jakiś przelicznik
-class TimeHabitsViewHolder(private val view: View) : HabitsViewHolder(view), ITimerCallback {
+class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context), ITimerCallback {
 
     private val nameText = view.findViewById<TextView>(R.id.name)
     private val doneText = view.findViewById<TextView>(R.id.done_text)

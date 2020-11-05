@@ -31,6 +31,8 @@ class QuantitativeHabitFragment : Fragment(), IHabitFragment {
         // Inflate the layout for this fragment
         val view =inflater.inflate(R.layout.fragment_quantitative_habit, container, false)
         initView(view)
+        val habit = arguments?.getParcelable<Habit>("habit")
+        setView(habit!!)
         return view
     }
 
@@ -55,5 +57,13 @@ class QuantitativeHabitFragment : Fragment(), IHabitFragment {
     override fun setupHabit(habit: Habit) {
         habit.goal = goal.text.toString().toInt()
         habit.unit = unitOptions.getValue()
+    }
+
+     fun setView(habit: Habit?) {
+         if(habit != null){
+             goal.setText(habit!!.goal.toString())
+             unitOptions.setActualValue(habit!!.unit)
+
+         }
     }
 }

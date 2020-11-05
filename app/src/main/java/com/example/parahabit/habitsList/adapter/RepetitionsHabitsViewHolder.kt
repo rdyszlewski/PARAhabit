@@ -1,5 +1,6 @@
 package com.example.parahabit.habitsList.adapter
 
+import android.app.Activity
 import android.graphics.Color
 import android.view.View
 import android.widget.Button
@@ -11,7 +12,7 @@ import com.example.parahabit.data.models.Habit
 import com.example.parahabit.data.repository.Repository
 import com.google.android.material.button.MaterialButton
 
-class RepetitionsHabitsViewHolder(private val view: View) : HabitsViewHolder(view) {
+class RepetitionsHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context) {
 
     private val nameText = view.findViewById<TextView>(R.id.name)
     private val amountText = view.findViewById<TextView>(R.id.amount)
