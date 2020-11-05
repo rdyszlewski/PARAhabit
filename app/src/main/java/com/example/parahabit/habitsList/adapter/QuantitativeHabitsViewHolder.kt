@@ -34,7 +34,7 @@ class QuantitativeHabitsViewHolder(view: View, context: Activity) : HabitsViewHo
     }
 
     override fun updateViewHolder(habit:Habit){
-        updateAmountText(habit, amountText)
+        AmountTextFormatter.updateText(habit, amountText)
         progressBar.progress = habit.getExecutionsValue()
     }
 }

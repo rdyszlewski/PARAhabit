@@ -1,7 +1,6 @@
 package com.example.parahabit.habitsList.adapter
 
 import android.app.Activity
-import android.graphics.Color
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -10,10 +9,11 @@ import com.example.parahabit.R
 import com.example.parahabit.data.models.Habit
 import com.example.parahabit.timer.ITimerCallback
 import com.example.parahabit.timer.Timer
+import com.example.parahabit.timer.TimerState
 import com.google.android.material.button.MaterialButton
 
 // TODO: zz godzinami prawdopodobnie będzie trzeba zrobić jakiś przelicznik
-class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context), ITimerCallback {
+class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(view, context) {
 
     private val nameText = view.findViewById<TextView>(R.id.name)
     private val doneText = view.findViewById<TextView>(R.id.done_text)
@@ -26,49 +26,17 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
     private val doneHelper = DoneViewHelper.Builder(view).setDoneText(doneText)
             .setInvisibleViews(listOf(startButton, editTimeButton)).build()
 
-    private var timer: Timer? = null
+    private val timerControl: TimerControl = TimerControl()
+
 
     override fun bind(habit: Habit) {
-        if (timer == null) {
-            initTimer(habit)
-        }
+        timerControl.init(habit)
         this.habit = habit
         nameText.text = habit.name
-        startButton.setOnClickListener {
-            onTimerClick(habit)
-        }
         progressBar.max = habit.goal
         updateView(habit)
     }
 
-    private fun onTimerClick(habit: Habit) {
-        if (isActiveHabit(habit)) {
-            if (!isTimerStarted()) {
-                startTimer()
-            } else {
-                stopTimer(habit)
-            }
-        } else {
-            startTimer()
-        }
-        setTimerState(isTimerStarted())
-    }
-
-    private fun isTimerStarted() = timer!!.state == Timer.TimerState.STARTED
-
-    private fun isActiveHabit(habit: Habit) :Boolean{
-        return timer!!.getHabit() != null
-                && timer!!.getHabit()!!.id == habit.id
-    }
-
-    private fun initTimer(habit: Habit) {
-        val application = view.context.applicationContext as HabitApplication
-        timer = application.timer
-        if (timer!!.getHabit() != null && isActiveHabit(habit)) {
-            // if timer is already running, we must subscribe events for this habit
-            timer?.subscribe(this)
-        }
-    }
     private fun setTimerState(started: Boolean){
         if(started){
             startButton.text = "X" // TODO: wymyślić później coś lepszego
@@ -79,43 +47,83 @@ class TimeHabitsViewHolder(view: View, context: Activity) : HabitsViewHolder(vie
         }
     }
 
-    private fun startTimer(){
-        timer!!.subscribe(this)
-        this.timer?.start(habit!!)
-    }
-
-    private fun stopTimer(habit: Habit){
-        timer!!.stop()
-    }
-
     override fun updateViewHolder(habit:Habit){
         progressBar.progress = habit.getExecutionsValue()
-        updateAmountText(habit, timeText)
+        AmountTextFormatter.updateText(habit, timeText)
     }
 
     override fun setDone(done:Boolean){
        doneHelper.setDone(done)
     }
 
-    override fun onTick(time: Long) {
-        val value = habit!!.goal - time
-        updateTime(value)
-    }
-
-    override fun onFinish(time: Long) {
-        // TODO: to może być dość niepewne, przy wielu widokach może wystepować problem
-        addExecution(habit!!, time.toInt())
-        setTimerState(false)
-        timer!!.unsubscribe(this)
-        updateView(habit!!)
-    }
-
-    override fun getTimerHabit(): Habit {
-        return habit!!
-    }
-
     private fun updateTime(time: Long){
         progressBar.progress = time.toInt()
-        updateAmountText(time, habit!!, timeText)
+        AmountTextFormatter.updateText(time, habit!!, timeText)
+    }
+
+    inner class TimerControl: ITimerCallback{
+
+        private var timer: Timer? = null
+
+        fun init(habit:Habit){
+            if(timer == null){
+                initTimer(habit)
+            }
+            startButton.setOnClickListener {
+                onTimerClick(habit)
+            }
+        }
+
+        private fun initTimer(habit: Habit) {
+            val application = view.context.applicationContext as HabitApplication
+            timer = application.timer
+            if (timer!!.isStarted() && timer!!.isActiveTimer(getTimerId())) {
+                // if timer is already running, we must subscribe events for this habit
+                timer?.subscribe(this)
+            }
+        }
+
+
+        private fun onTimerClick(habit: Habit) {
+            // TODO: posprawdzać jeszcze to
+            if (timer!!.isActiveTimer(getTimerId())) {
+                if (!timer!!.isStarted()) {
+                    startTimer()
+                } else {
+                    stopTimer(habit)
+                }
+            } else {
+                startTimer()
+            }
+            setTimerState(timer!!.isStarted())
+        }
+
+        private fun startTimer(){
+            timer!!.subscribe(this)
+            val time = habit!!.goal - habit!!.getExecutionsValue()
+            this.timer?.start(habit!!.id, time.toLong())
+        }
+
+        private fun stopTimer(habit: Habit){
+            timer!!.stop()
+            timer!!.unsubscribe(this)
+        }
+
+        override fun onTick(time: Long) {
+            val value = habit!!.goal - time
+            updateTime(value)
+        }
+
+        override fun onFinish(time: Long) {
+            // TODO: to może być dość niepewne, przy wielu widokach może wystepować problem
+            addExecution(habit!!, time.toInt())
+            setTimerState(false)
+            timer!!.unsubscribe(this)
+            updateView(habit!!)
+        }
+
+        override fun getTimerId(): Long {
+            return habit!!.id
+        }
     }
 }

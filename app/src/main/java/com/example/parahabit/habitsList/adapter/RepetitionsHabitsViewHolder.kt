@@ -43,7 +43,7 @@ class RepetitionsHabitsViewHolder(view: View, context: Activity) : HabitsViewHol
     }
 
     override fun updateViewHolder(habit:Habit){
-        updateAmountText(habit)
+        AmountTextFormatter.updateText(habit, amountText)
         progressBar.progress = habit.executions.size
     }
 
